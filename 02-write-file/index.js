@@ -1,21 +1,23 @@
 const fs = require('fs');
 const path = require('path');
-const process = require('process');
-
-const fileName = fs.createWriteStream(path.join('./02-write-file/text.txt'));
-
-process.stdout.write('Hello, u can write your text here!');
-process.stdin.on('data', (message) => {
-  if(message.toString() === 'exit') {
-    closeConsole();
-  } else {
-    fileName.write(message);
-  }
-});
+const { stdin, stdout, exit } = process;
 
 function closeConsole() {
-  process.stdout.write('Close write place');
-  process.exit();
+  stdout.write('Close write place');
+  exit();
 }
 
 process.on('SIGINT', closeConsole);
+
+const CreateFile = fs.createWriteStream(path.join('./02-write-file/text.txt'));
+
+stdout.write('Hello, u can write your text here!\r\n');
+stdin.on('data', (message) => {
+  if(message.toString() === 'exit\r\n') {
+    closeConsole();
+  } else {
+    CreateFile.write(message);
+  }
+});
+
+CreateFile.close();
