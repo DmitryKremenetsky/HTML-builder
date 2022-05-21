@@ -22,4 +22,6 @@ fs.readdir(styleComponent, (err, files) => {
       }
     }
   });
+
+  console.log('bundel is create');
 });
