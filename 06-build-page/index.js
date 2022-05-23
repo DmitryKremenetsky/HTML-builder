@@ -10,7 +10,6 @@ const componentsHTMLPage = path.join(__dirname, 'components');
 const copyHTMLPath = fs.createReadStream('./06-build-page/template.html');
 
 let writeStyleStream = fs.createWriteStream(createStylesBundel);
-let templateString = '';
 
 fs.promises.mkdir(createDirBundelPath, {recursive: true});
 
@@ -58,7 +57,7 @@ copyDir(copyDirAssets, createDistPathAssets);
 async function creteHtmlPage() {
   const createHTMLBundel = fs.createWriteStream(path.join(__dirname, 'project-dist', 'index.html'));
   copyHTMLPath.on('data', (chunk) => {
-    templateString = chunk.toString();
+    let templateString = chunk.toString();
     
     fs.readdir(componentsHTMLPage, {
       withFileTypes: true
