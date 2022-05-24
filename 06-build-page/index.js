@@ -7,7 +7,8 @@ const copyDirAssets = path.join(__dirname, 'assets');
 const createDistPathAssets = path.join(__dirname, 'project-dist', 'assets');
 const copyStylesPath = path.join(__dirname, 'styles');
 const componentsHTMLPage = path.join(__dirname, 'components');
-const copyHTMLPath = fs.createReadStream('./06-build-page/template.html');
+const templateHTML = path.join(__dirname, 'template.html');
+const copyHTMLPath = fs.createReadStream(templateHTML, 'utf-8');
 
 let writeStyleStream = fs.createWriteStream(createStylesBundel);
 

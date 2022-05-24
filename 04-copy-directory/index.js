@@ -6,6 +6,20 @@ const addFolderCopy = path.join(__dirname, 'files');
 
 fs.promises.mkdir(createCopyDir, {recursive: true});
 
+fs.readdir(createCopyDir, (err, files) => {
+  if (err) {
+    throw err;
+  }
+
+  for (let i = 0; i < files.length; i++) {
+    fs.unlink(createCopyDir + '/' + files[i], (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+  }
+});
+
 fs.readdir(addFolderCopy, (err, files) => {
   if (err) {
     console.log(err);

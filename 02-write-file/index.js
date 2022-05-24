@@ -9,7 +9,7 @@ function closeConsole() {
 
 process.on('SIGINT', closeConsole);
 
-const CreateFile = fs.createWriteStream(path.join('./02-write-file/text.txt'));
+const CreateFile = fs.createWriteStream(path.join(__dirname, 'text.txt'));
 
 stdout.write('Hello, u can write your text here!\r\n');
 stdin.on('data', (message) => {
@@ -19,5 +19,3 @@ stdin.on('data', (message) => {
     CreateFile.write(message);
   }
 });
-
-CreateFile.close();
