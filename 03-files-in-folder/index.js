@@ -1,17 +1,24 @@
-const fs = require('fs');
+const fs = require('fs/promises');
 
-const result = fs.readdirSync('./03-files-in-folder/secret-folder');
+async function main() {
+  const fileOrDirList = await fs.readdir('./03-files-in-folder/secret-folder');
 
-result
-  .map((fileOrDirName) => ({
-    name: fileOrDirName,
-    stats: fs.statSync(`./03-files-in-folder/secret-folder/${fileOrDirName}`)
-  }))
-  .filter(findFileOrDirData => findFileOrDirData.stats.isFile())
-  .forEach(file => {
-    const [fileName, fileExtension] = file.name.split('.');
-    const fileSize = Math.ceil(file.stats.size / 1024);
+  const fileOrDirStats = await Promise.all(
+    fileOrDirList.map(async (fileOrDirName) => ({
+      name: fileOrDirName,
+      stats: await fs.stat(`./03-files-in-folder/secret-folder/${fileOrDirName}`)
+    }))
+  );
 
-    console.log(`${fileName} - ${fileExtension} - ${fileSize}kb`);
-  });
+  fileOrDirStats
+    .filter((findFileOrDirData) => findFileOrDirData.stats.isFile())
+    .forEach(file => {
+      const [fileName, fileExtension] = file.name.split('.');
+      const fileSize = Math.ceil(file.stats.size / 1024);
+
+      console.log(`${fileName} - ${fileExtension} - ${fileSize}kb`);
+    });
+}
+
+main();
 

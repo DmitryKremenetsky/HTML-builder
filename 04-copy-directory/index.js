@@ -1,31 +1,25 @@
-const fs = require('fs');
+const fs = require('fs/promises');
 const path = require('path');
  
 const createCopyDir = path.join(__dirname, 'copy-files');
 const addFolderCopy = path.join(__dirname, 'files');
 
-fs.promises.mkdir(createCopyDir, {recursive: true});
+async function main() {
+  try {
+    await fs.mkdir(createCopyDir, {recursive: true});
 
-fs.readdir(createCopyDir, (err, files) => {
-  if (err) {
-    throw err;
-  }
+    const copiedFiles = await fs.readdir(createCopyDir);
+    for (const copiedFile of copiedFiles) {
+      await fs.unlink(`${createCopyDir}/${copiedFile}`);
+    }
 
-  for (let i = 0; i < files.length; i++) {
-    fs.promises.unlink(createCopyDir + '/' + files[i]);
-  }
-});
-
-fs.readdir(addFolderCopy, (err, files) => {
-  if (err) {
+    const files = await fs.readdir(addFolderCopy);
+    for (const file of files) {
+      await fs.copyFile(`${addFolderCopy}/${file}`, `${createCopyDir}/${file}`);
+    }
+  } catch (err) {
     console.log(err);
-  } 
-
-  for (let i = 0; i < files.length; i++) {
-    fs.copyFile(addFolderCopy + '/' + files[i], createCopyDir + '/' + files[i], err => {
-      if (err) {
-        console.log(err);
-      }
-    });
   }
-});
+} 
+
+main();
