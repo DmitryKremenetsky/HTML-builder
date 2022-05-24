@@ -10,28 +10,38 @@ const componentsHTMLPage = path.join(__dirname, 'components');
 const templateHTML = path.join(__dirname, 'template.html');
 const copyHTMLPath = fs.createReadStream(templateHTML, 'utf-8');
 
-let writeStyleStream = fs.createWriteStream(createStylesBundel);
-
 fs.promises.mkdir(createDirBundelPath, {recursive: true});
 
-fs.readdir(copyStylesPath, (err, files) => {
-  files.forEach(file => {
-    if (path.extname(file, err) == '.css') {
-      if (err) {
-        console.log(err); 
-      } else {
-        const newStylesPath = path.join(__dirname, 'styles', file);
-        const stream = fs.createReadStream(newStylesPath);
-        stream.on('data', (chunk , err) => {
-          if (err) {
-            console.log(err);
-          }
-          writeStyleStream.write(chunk);
-        });
+async function clearDir() {
+  try {
+    await fs.promises.rm(createDirBundelPath, {recursive: true, force: true});
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function copeStyle() {
+  let writeStyleStream = fs.createWriteStream(createStylesBundel);
+
+  fs.readdir(copyStylesPath, (err, files) => {
+    files.forEach(file => {
+      if (path.extname(file, err) == '.css') {
+        if (err) {
+          console.log(err); 
+        } else {
+          const newStylesPath = path.join(__dirname, 'styles', file);
+          const stream = fs.createReadStream(newStylesPath);
+          stream.on('data', (chunk , err) => {
+            if (err) {
+              console.log(err);
+            }
+            writeStyleStream.write(chunk);
+          });
+        }
       }
-    }
+    });
   });
-});
+}
 
 async function copyDir(copyDirAssets, createDistPathAssets) {
   await fs.promises.mkdir(createDistPathAssets, {
@@ -52,8 +62,6 @@ async function copyDir(copyDirAssets, createDistPathAssets) {
     }
   });
 }
-
-copyDir(copyDirAssets, createDistPathAssets);
 
 async function creteHtmlPage() {
   const createHTMLBundel = fs.createWriteStream(path.join(__dirname, 'project-dist', 'index.html'));
@@ -81,4 +89,10 @@ async function creteHtmlPage() {
   });
 }
 
-creteHtmlPage(console.log('Folder Project dist is Created'));
+(async () => {
+  await clearDir();
+  await copyDir(copyDirAssets, createDistPathAssets);
+  await copeStyle();
+  await creteHtmlPage(); 
+})();
+

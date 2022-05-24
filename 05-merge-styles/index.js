@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const createBundel = path.join(__dirname, 'project-dist', 'bundel.css');
+const createBundle = path.join(__dirname, 'project-dist', 'bundle.css');
 const styleComponent = path.join(__dirname, 'styles');
-let writeStream = fs.createWriteStream(createBundel);
+let writeStream = fs.createWriteStream(createBundle);
 
 fs.readdir(styleComponent, (err, files) => {
   files.forEach(file => {
@@ -11,8 +11,8 @@ fs.readdir(styleComponent, (err, files) => {
       if (err) {
         console.log(err); 
       } else {
-        const newBundel = path.join(__dirname, 'styles', file);
-        const stream = fs.createReadStream(newBundel);
+        const newBundle = path.join(__dirname, 'styles', file);
+        const stream = fs.createReadStream(newBundle);
         stream.on('data', (chunk , err) => {
           if (err) {
             console.log(err);
@@ -23,5 +23,5 @@ fs.readdir(styleComponent, (err, files) => {
     }
   });
 
-  console.log('bundel is create');
+  console.log('Bundle is create');
 });

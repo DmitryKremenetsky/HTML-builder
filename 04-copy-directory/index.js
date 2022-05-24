@@ -12,11 +12,7 @@ fs.readdir(createCopyDir, (err, files) => {
   }
 
   for (let i = 0; i < files.length; i++) {
-    fs.unlink(createCopyDir + '/' + files[i], (err) => {
-      if (err) {
-        throw err;
-      }
-    });
+    fs.promises.unlink(createCopyDir + '/' + files[i]);
   }
 });
 
