@@ -18,6 +18,7 @@ fs.readdir(styleComponent, (err, files) => {
             console.log(err);
           }
           writeStream.write(chunk);
+          writeStream.write('\r\n');
         });
       }
     }
